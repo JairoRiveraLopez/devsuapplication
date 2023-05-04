@@ -34,7 +34,7 @@ public class Movement implements java.io.Serializable{
     }
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "MOVEMENT_DATE", length = 10, nullable = false)
+    @Column(name = "MOVEMENT_DATE", length = 10)
     public Date getMovementDate() {
         return movementDate;
     }
@@ -43,7 +43,7 @@ public class Movement implements java.io.Serializable{
         this.movementDate = movementDate;
     }
 
-    @Column(name = "MOVEMENT_TYPE", length = 15, nullable = false)
+    @Column(name = "MOVEMENT_TYPE", length = 15)
     public String getMovementType() {
         return movementType;
     }
@@ -52,7 +52,7 @@ public class Movement implements java.io.Serializable{
         this.movementType = movementType;
     }
 
-    @Column(name = "VALUE", nullable = false)
+    @Column(name = "VALUE")
     public Double getValue() {
         return value;
     }
@@ -61,7 +61,7 @@ public class Movement implements java.io.Serializable{
         this.value = value;
     }
 
-    @Column(name = "STATE", nullable = false)
+    @Column(name = "STATE")
     public Character getState() {
         return state;
     }
@@ -71,7 +71,7 @@ public class Movement implements java.io.Serializable{
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_ACCOUNT", nullable = false)
+    @JoinColumn(name = "ID_ACCOUNT")
     public Account getAccount() {
         return account;
     }

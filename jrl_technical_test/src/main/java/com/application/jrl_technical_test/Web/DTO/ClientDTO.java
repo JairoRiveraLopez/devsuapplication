@@ -1,40 +1,32 @@
-package com.application.jrl_technical_test.Entities;
+package com.application.jrl_technical_test.Web.DTO;
 
-import javax.persistence.*;
+public class ClientDTO {
 
-@MappedSuperclass
-public abstract class Person implements java.io.Serializable {
-
-    private String personId;
+    private String password;
+    private String state;
     private String identification;
     private String name;
     private String lastName1;
     private String lastName2;
-    private Character genre;
+    private String genre;
     private Integer age;
     private String address;
     private String phone;
 
-    public Person(){}
-
-    public Person(String personId, String identification, String name, String lastName1, String lastName2, Character genre, Integer age, String address, String phone) {
-        this.personId = personId;
-        this.identification = identification;
-        this.name = name;
-        this.lastName1 = lastName1;
-        this.lastName2 = lastName2;
-        this.genre = genre;
-        this.age = age;
-        this.address = address;
-        this.phone = phone;
+    public String getPassword() {
+        return password;
     }
 
-    public String getPersonId() {
-        return personId;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setPersonId(String personId) {
-        this.personId = personId;
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getIdentification() {
@@ -69,11 +61,11 @@ public abstract class Person implements java.io.Serializable {
         this.lastName2 = lastName2;
     }
 
-    public Character getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(Character genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

@@ -1,7 +1,5 @@
 package com.application.jrl_technical_test.Entities;
 
-import com.application.jrl_technical_test.Security.ClientPasswordEncoder;
-
 import javax.persistence.*;
 
 import java.util.Set;
@@ -11,9 +9,12 @@ import java.util.Set;
 public class Client extends Person implements java.io.Serializable{
 
     private String clientId;
+
     private String password;
     private Character state;
     private Set<Account> accounts;
+
+    public Client() {}
 
     public Client(String personId, String identification, String name, String lastName1, String lastName2, Character genre, Integer age, String address, String phone, String clientId, String password, Character state, Set<Account> accounts) {
         super(personId, identification, name, lastName1, lastName2, genre, age, address, phone);
@@ -29,7 +30,7 @@ public class Client extends Person implements java.io.Serializable{
         return clientId;
     }
 
-    @Column(name = "PASSWORD", length = 60, nullable = false)
+    @Column(name = "PASSWORD", length = 60)
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
@@ -42,7 +43,7 @@ public class Client extends Person implements java.io.Serializable{
         this.password = password;
     }
 
-    @Column(name = "STATE", length = 1, nullable = false)
+    @Column(name = "STATE", length = 1)
     public Character getState() {
         return state;
     }

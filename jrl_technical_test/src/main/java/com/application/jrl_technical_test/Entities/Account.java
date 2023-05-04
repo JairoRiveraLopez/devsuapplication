@@ -36,7 +36,7 @@ public class Account implements java.io.Serializable{
         this.accountId = accountId;
     }
 
-    @Column(name = "ACCOUNT_NUMBER", length = 20, nullable = false)
+    @Column(name = "ACCOUNT_NUMBER", length = 20)
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -45,7 +45,7 @@ public class Account implements java.io.Serializable{
         this.accountNumber = accountNumber;
     }
 
-    @Column(name = "ACCOUNT_TYPE", length = 15, nullable = false)
+    @Column(name = "ACCOUNT_TYPE", length = 15)
     public String getAccountType() {
         return accountType;
     }
@@ -54,7 +54,7 @@ public class Account implements java.io.Serializable{
         this.accountType = accountType;
     }
 
-    @Column(name = "INITIAL_BALANCE", nullable = false)
+    @Column(name = "INITIAL_BALANCE")
     public BigDecimal getInitialBalance() {
         return initialBalance;
     }
@@ -63,7 +63,7 @@ public class Account implements java.io.Serializable{
         this.initialBalance = initialBalance;
     }
 
-    @Column(name = "STATE", nullable = false)
+    @Column(name = "STATE", length = 1)
     public Character getState() {
         return state;
     }
