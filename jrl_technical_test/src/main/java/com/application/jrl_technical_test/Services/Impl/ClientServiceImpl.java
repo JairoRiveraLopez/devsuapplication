@@ -1,6 +1,7 @@
 package com.application.jrl_technical_test.Services.Impl;
 
 import com.application.jrl_technical_test.DAO.ClientHome;
+import com.application.jrl_technical_test.Services.ValidatorService;
 import com.application.jrl_technical_test.Web.DTO.ClientQueryDTO;
 import com.application.jrl_technical_test.Web.DTO.ClientTransactionDTO;
 import com.application.jrl_technical_test.Web.DTO.ServiceResponseDTO;
@@ -147,13 +148,13 @@ public class ClientServiceImpl implements IClientService {
         try{
             Optional<Client> clientQuery = Optional.ofNullable(clientHome.findByIdentification(identification));
             if(clientQuery.isPresent()) {
-                Object client = instantiateClient(clientQuery.get(), null, "findById");
+                Object client = instantiateClient(clientQuery.get(), null, "findByClient");
                 if(client instanceof ClientQueryDTO){
                     data.put("clientFound",client);
                 }
             }else {
                 statusCode = CodesConstants.BAD_REQUEST_STATUS_CODE;
-                data.put("message", MessagesUtil.CLIENT_FIND_BY_ID_NOT_FOUND);
+                data.put("message", MessagesUtil.CLIENT_FIND_IDENTIFICATION_NOT_FOUND);
             }
             ServiceResponseDTO serviceResponseDTO = new ServiceResponseDTO();
             serviceResponseDTO.setStatusCode(statusCode);
@@ -165,39 +166,42 @@ public class ClientServiceImpl implements IClientService {
     }
 
     private Object instantiateClient(Client clientQuery, ClientTransactionDTO clientTransactionDTO, String action){
-        Client client = new Client();
-        ClientQueryDTO clientQueryDTOResponse = new ClientQueryDTO();
         if(action.equals("PERSIST")){
+            Client client = new Client();
             client.setClientId(UUID.randomUUID().toString());
             client.setPassword(clientPasswordEncoder.encode(clientTransactionDTO.getPassword()));
             client.setState(clientTransactionDTO.getState().equalsIgnoreCase("ACTIVE") ? ConstantsUtil.ACTIVE.getValue()
                     : ConstantsUtil.INACTIVE.getValue());
             client.setPersonId(UUID.randomUUID().toString());
-            client.setIdentification(clientTransactionDTO.getIdentification());
-            client.setName(clientTransactionDTO.getName());
-            client.setLastName1(clientTransactionDTO.getLastName1());
-            client.setLastName2(clientTransactionDTO.getLastName2());
+            client.setIdentification(clientTransactionDTO.getIdentification().trim());
+            client.setName(clientTransactionDTO.getName().trim());
+            client.setLastName1(clientTransactionDTO.getLastName1().trim());
+            client.setLastName2(clientTransactionDTO.getLastName2().trim());
             client.setGenre(clientTransactionDTO.getGenre().equalsIgnoreCase("MALE") ? ConstantsUtil.MALE.getValue()
                     : ConstantsUtil.FEMALE.getValue());
             client.setAge(clientTransactionDTO.getAge());
-            client.setAddress(clientTransactionDTO.getAddress());
-            client.setPhone(clientTransactionDTO.getPhone());
+            client.setAddress(clientTransactionDTO.getAddress().trim());
+            client.setPhone(clientTransactionDTO.getPhone().trim());
+            return client;
         } else if(action.equals("UPDATE")){
+            Client client = new Client();
             client.setClientId(clientQuery.getClientId());
             client.setPassword(clientPasswordEncoder.encode(clientTransactionDTO.getPassword()));
             client.setState(clientTransactionDTO.getState().equalsIgnoreCase("ACTIVE") ? ConstantsUtil.ACTIVE.getValue()
                     : ConstantsUtil.INACTIVE.getValue());
             client.setPersonId(clientQuery.getPersonId());
-            client.setIdentification(clientTransactionDTO.getIdentification());
-            client.setName(clientTransactionDTO.getName());
-            client.setLastName1(clientTransactionDTO.getLastName1());
-            client.setLastName2(clientTransactionDTO.getLastName2());
+            client.setIdentification(clientTransactionDTO.getIdentification().trim());
+            client.setName(clientTransactionDTO.getName().trim());
+            client.setLastName1(clientTransactionDTO.getLastName1().trim());
+            client.setLastName2(clientTransactionDTO.getLastName2().trim());
             client.setGenre(clientTransactionDTO.getGenre().equalsIgnoreCase("MALE") ? ConstantsUtil.MALE.getValue()
                     : ConstantsUtil.FEMALE.getValue());
             client.setAge(clientTransactionDTO.getAge());
-            client.setAddress(clientTransactionDTO.getAddress());
-            client.setPhone(clientTransactionDTO.getPhone());
+            client.setAddress(clientTransactionDTO.getAddress().trim());
+            client.setPhone(clientTransactionDTO.getPhone().trim());
+            return client;
         }else{
+            ClientQueryDTO clientQueryDTOResponse = new ClientQueryDTO();
             clientQueryDTOResponse.setClientId(clientQuery.getClientId());
             clientQueryDTOResponse.setState(clientQuery.getState().equals(ConstantsUtil.ACTIVE.getValue()) ? "ACTIVE" : "INACTIVE");
             clientQueryDTOResponse.setIdentification(clientQuery.getIdentification());
@@ -210,7 +214,6 @@ public class ClientServiceImpl implements IClientService {
             clientQueryDTOResponse.setPhone(clientQuery.getPhone());
             return clientQueryDTOResponse;
         }
-        return client;
     }
 
     private Boolean editClientInformation(String dataType, String value, Client client){

@@ -14,6 +14,8 @@ public class Movement implements java.io.Serializable{
     private Character state;
     private Account account;
 
+    public Movement(){}
+
     public Movement(String idMovement, Date movementDate, String movementType, Double value, Character state, Account account) {
         this.idMovement = idMovement;
         this.movementDate = movementDate;

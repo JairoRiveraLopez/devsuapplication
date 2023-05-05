@@ -16,6 +16,8 @@ public class Account implements java.io.Serializable{
     private Client client;
     private Set<Movement> movements;
 
+    public Account(){}
+
     public Account(String accountId, String accountNumber, String accountType, BigDecimal initialBalance, Character state, Client client, Set<Movement> movements) {
         this.accountId = accountId;
         this.accountNumber = accountNumber;

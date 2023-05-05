@@ -5,6 +5,7 @@ public enum ConstantsUtil {
     INACTIVE('I', "INACTIVE"),
     FEMALE('F', "FEMALE"),
     MALE('M', "MALE");
+    public static String KEY_DAILY_LIMIT_APP_TASK = "ADLAP";
 
     private final Character value;
 

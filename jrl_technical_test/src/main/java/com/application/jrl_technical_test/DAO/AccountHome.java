@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 @SpringBootApplication
 @Stateless
@@ -45,6 +47,20 @@ public class AccountHome {
             Account result = entityManager.find(Account.class, accountId);
             return result;
         } catch (RuntimeException error){
+            throw error;
+        }
+    }
+
+    public Account findByAccountNumber(String accountNumber){
+        try{
+            TypedQuery<Account> query = entityManager.createQuery("SELECT A FROM Account A WHERE A.accountNumber = :accountNumber", Account.class);
+            query.setParameter("accountNumber", accountNumber);
+            Account account = (Account) query.getSingleResult();
+            return account;
+        } catch (RuntimeException error){
+            if(error instanceof NoResultException){
+                return null;
+            }
             throw error;
         }
     }

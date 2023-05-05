@@ -1,4 +1,4 @@
-package com.application.jrl_technical_test.Services.Impl;
+package com.application.jrl_technical_test.Services;
 
 import org.springframework.stereotype.Service;
 
