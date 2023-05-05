@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 @SpringBootApplication
 @Stateless
@@ -45,6 +47,20 @@ public class ClientHome {
             Client result = entityManager.find(Client.class, clientId);
             return result;
         } catch (RuntimeException error){
+            throw error;
+        }
+    }
+
+    public Client findByIdentification(String identification){
+        try{
+            TypedQuery<Client> query = entityManager.createQuery("SELECT C FROM Client C WHERE C.identification = :identification", Client.class);
+            query.setParameter("identification", identification);
+            Client client = (Client) query.getSingleResult();
+            return client;
+        } catch (RuntimeException error){
+            if(error instanceof NoResultException){
+                return null;
+            }
             throw error;
         }
     }

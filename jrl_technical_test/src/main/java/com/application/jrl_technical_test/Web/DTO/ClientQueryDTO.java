@@ -1,7 +1,8 @@
 package com.application.jrl_technical_test.Web.DTO;
 
-public class ClientDTO {
+public class ClientQueryDTO {
 
+    private String clientId;
     private String password;
     private String state;
     private String identification;
@@ -12,6 +13,14 @@ public class ClientDTO {
     private Integer age;
     private String address;
     private String phone;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
     public String getPassword() {
         return password;
@@ -92,4 +101,5 @@ public class ClientDTO {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
 }

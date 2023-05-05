@@ -1,7 +1,8 @@
 package com.application.jrl_technical_test.Services.Impl;
 
 import com.application.jrl_technical_test.DAO.ClientHome;
-import com.application.jrl_technical_test.Web.DTO.ClientDTO;
+import com.application.jrl_technical_test.Web.DTO.ClientQueryDTO;
+import com.application.jrl_technical_test.Web.DTO.ClientTransactionDTO;
 import com.application.jrl_technical_test.Web.DTO.ServiceResponseDTO;
 import com.application.jrl_technical_test.Entities.Client;
 import com.application.jrl_technical_test.Security.ClientPasswordEncoder;
@@ -28,13 +29,15 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional()
-    public ServiceResponseDTO insertClient(ClientDTO clientDTO) throws Exception {
+    public ServiceResponseDTO insertClient(ClientTransactionDTO clientTransactionDTO) throws Exception {
         int statusCode = ((int) CodesConstants.SUCCESS_STATUS_CODE);
         Map<String, Object> data = new LinkedHashMap<>();
-        if(!validatorService.objectHasNullAttributes(clientDTO)){
+        if(!validatorService.objectHasNullAttributes(clientTransactionDTO)){
             try{
-                Client client = instantiateClient(null, clientDTO, "PERSIST");
-                clientHome.persist(client);
+                Object client = instantiateClient(null, clientTransactionDTO, "PERSIST");
+                if(client instanceof Client){
+                    clientHome.persist((Client) client);
+                }
                 data.put("message", MessagesUtil.CLIENT_PERSIST_SUCCESS);
             }catch (Exception error){
                 throw error;
@@ -51,15 +54,17 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     @Transactional()
-    public ServiceResponseDTO updateClient(String clientId, ClientDTO clientDTO) throws Exception {
+    public ServiceResponseDTO updateClient(String clientId, ClientTransactionDTO clientTransactionDTO) throws Exception {
         int statusCode = ((int) CodesConstants.SUCCESS_STATUS_CODE);
         Map<String, Object> data = new LinkedHashMap<>();
-        if(!validatorService.objectHasNullAttributes(clientDTO) && !clientId.isEmpty()){
+        if(!validatorService.objectHasNullAttributes(clientTransactionDTO)){
             try{
                 Optional<Client> clientQuery = Optional.ofNullable(clientHome.findById(clientId));
                 if(clientQuery.isPresent()){
-                    Client client = instantiateClient(clientQuery.get(), clientDTO, "UPDATE");
-                    clientHome.merge(client);
+                    Object client = instantiateClient(clientQuery.get(), clientTransactionDTO, "UPDATE");
+                    if(client instanceof Client){
+                        clientHome.merge((Client) client);
+                    }
                     data.put("message", MessagesUtil.CLIENT_UPDATE_SUCCESS);
                 } else {
                     statusCode = CodesConstants.BAD_REQUEST_STATUS_CODE;
@@ -79,6 +84,7 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
+    @Transactional()
     public ServiceResponseDTO editClient(String clientId, String dataType, String value) throws Exception {
         int statusCode = ((int) CodesConstants.SUCCESS_STATUS_CODE);
         Map<String, Object> data = new LinkedHashMap<>();
@@ -90,8 +96,13 @@ public class ClientServiceImpl implements IClientService {
                 Optional<Client> clientQuery = Optional.ofNullable(clientHome.findById(clientId));
                 if(clientQuery.isPresent()){
                     Client client = clientQuery.get();
-                    editClientInformation(dataType, value, client);
-                    data.put("message", MessagesUtil.CLIENT_EDIT_SUCCESS);
+                    if(editClientInformation(dataType, value, client)){
+                        data.put("message", MessagesUtil.CLIENT_EDIT_SUCCESS);
+                    }else {
+                        statusCode = CodesConstants.BAD_REQUEST_STATUS_CODE;
+                        data.put("message", MessagesUtil.CLIENT_EDIT_FAIL_WRONG_DATATYPE);
+                    }
+
                 } else {
                     statusCode = CodesConstants.BAD_REQUEST_STATUS_CODE;
                     data.put("message", MessagesUtil.CLIENT_EDIT_FAIL_NOT_FOUND);
@@ -107,6 +118,7 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
+    @Transactional()
     public ServiceResponseDTO removeClient(String clientId) throws Exception {
         int statusCode = ((int) CodesConstants.SUCCESS_STATUS_CODE);
         Map<String, Object> data = new LinkedHashMap<>();
@@ -128,61 +140,81 @@ public class ClientServiceImpl implements IClientService {
         }
     }
 
-    private Client instantiateClient(Client clientQuery, ClientDTO clientDTO, String action){
+    @Override
+    public ServiceResponseDTO findClientByIdentification(String identification) throws Exception {
+        int statusCode = ((int) CodesConstants.SUCCESS_STATUS_CODE);
+        Map<String, Object> data = new LinkedHashMap<>();
+        try{
+            Optional<Client> clientQuery = Optional.ofNullable(clientHome.findByIdentification(identification));
+            if(clientQuery.isPresent()) {
+                Object client = instantiateClient(clientQuery.get(), null, "findById");
+                if(client instanceof ClientQueryDTO){
+                    data.put("clientFound",client);
+                }
+            }else {
+                statusCode = CodesConstants.BAD_REQUEST_STATUS_CODE;
+                data.put("message", MessagesUtil.CLIENT_FIND_BY_ID_NOT_FOUND);
+            }
+            ServiceResponseDTO serviceResponseDTO = new ServiceResponseDTO();
+            serviceResponseDTO.setStatusCode(statusCode);
+            serviceResponseDTO.setInformation(data);
+            return serviceResponseDTO;
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    private Object instantiateClient(Client clientQuery, ClientTransactionDTO clientTransactionDTO, String action){
         Client client = new Client();
+        ClientQueryDTO clientQueryDTOResponse = new ClientQueryDTO();
         if(action.equals("PERSIST")){
             client.setClientId(UUID.randomUUID().toString());
-            client.setPassword(clientPasswordEncoder.encode(clientDTO.getPassword()));
-            client.setState(clientDTO.getState().equalsIgnoreCase("ACTIVE") ? ConstantsUtil.ACTIVE.getValue()
+            client.setPassword(clientPasswordEncoder.encode(clientTransactionDTO.getPassword()));
+            client.setState(clientTransactionDTO.getState().equalsIgnoreCase("ACTIVE") ? ConstantsUtil.ACTIVE.getValue()
                     : ConstantsUtil.INACTIVE.getValue());
             client.setPersonId(UUID.randomUUID().toString());
-            client.setIdentification(clientDTO.getIdentification());
-            client.setName(clientDTO.getName());
-            client.setLastName1(clientDTO.getLastName1());
-            client.setLastName2(clientDTO.getLastName2());
-            client.setGenre(clientDTO.getGenre().equalsIgnoreCase("MALE") ? ConstantsUtil.MALE.getValue()
+            client.setIdentification(clientTransactionDTO.getIdentification());
+            client.setName(clientTransactionDTO.getName());
+            client.setLastName1(clientTransactionDTO.getLastName1());
+            client.setLastName2(clientTransactionDTO.getLastName2());
+            client.setGenre(clientTransactionDTO.getGenre().equalsIgnoreCase("MALE") ? ConstantsUtil.MALE.getValue()
                     : ConstantsUtil.FEMALE.getValue());
-            client.setAge(clientDTO.getAge());
-            client.setAddress(clientDTO.getAddress());
-            client.setPhone(clientDTO.getPhone());
+            client.setAge(clientTransactionDTO.getAge());
+            client.setAddress(clientTransactionDTO.getAddress());
+            client.setPhone(clientTransactionDTO.getPhone());
         } else if(action.equals("UPDATE")){
             client.setClientId(clientQuery.getClientId());
-            client.setPassword(clientPasswordEncoder.encode(clientDTO.getPassword()));
-            client.setState(clientDTO.getState().equalsIgnoreCase("ACTIVE") ? ConstantsUtil.ACTIVE.getValue()
+            client.setPassword(clientPasswordEncoder.encode(clientTransactionDTO.getPassword()));
+            client.setState(clientTransactionDTO.getState().equalsIgnoreCase("ACTIVE") ? ConstantsUtil.ACTIVE.getValue()
                     : ConstantsUtil.INACTIVE.getValue());
             client.setPersonId(clientQuery.getPersonId());
-            client.setIdentification(clientDTO.getIdentification());
-            client.setName(clientDTO.getName());
-            client.setLastName1(clientDTO.getLastName1());
-            client.setLastName2(clientDTO.getLastName2());
-            client.setGenre(clientDTO.getGenre().equalsIgnoreCase("MALE") ? ConstantsUtil.MALE.getValue()
+            client.setIdentification(clientTransactionDTO.getIdentification());
+            client.setName(clientTransactionDTO.getName());
+            client.setLastName1(clientTransactionDTO.getLastName1());
+            client.setLastName2(clientTransactionDTO.getLastName2());
+            client.setGenre(clientTransactionDTO.getGenre().equalsIgnoreCase("MALE") ? ConstantsUtil.MALE.getValue()
                     : ConstantsUtil.FEMALE.getValue());
-            client.setAge(clientDTO.getAge());
-            client.setAddress(clientDTO.getAddress());
-            client.setPhone(clientDTO.getPhone());
+            client.setAge(clientTransactionDTO.getAge());
+            client.setAddress(clientTransactionDTO.getAddress());
+            client.setPhone(clientTransactionDTO.getPhone());
+        }else{
+            clientQueryDTOResponse.setClientId(clientQuery.getClientId());
+            clientQueryDTOResponse.setState(clientQuery.getState().equals(ConstantsUtil.ACTIVE.getValue()) ? "ACTIVE" : "INACTIVE");
+            clientQueryDTOResponse.setIdentification(clientQuery.getIdentification());
+            clientQueryDTOResponse.setName(clientQuery.getName());
+            clientQueryDTOResponse.setLastName1(clientQuery.getLastName1());
+            clientQueryDTOResponse.setLastName2(clientQuery.getLastName2());
+            clientQueryDTOResponse.setGenre(clientQuery.getGenre().equals(ConstantsUtil.MALE.getValue()) ? "MALE" : "FEMALE");
+            clientQueryDTOResponse.setAge(clientQuery.getAge());
+            clientQueryDTOResponse.setAddress(clientQuery.getAddress());
+            clientQueryDTOResponse.setPhone(clientQuery.getPhone());
+            return clientQueryDTOResponse;
         }
-
         return client;
     }
 
-
-
-    private Character getStateByStringValue(String value){
-        Character response;
-        switch (value) {
-            case "ACTIVE":
-                response = ConstantsUtil.ACTIVE.getValue();
-                break;
-            case "INACTIVE":
-                response = ConstantsUtil.INACTIVE.getValue();
-                break;
-            default:
-                response = null;
-        }
-        return response;
-    }
-
-    private void editClientInformation(String dataType, String value, Client client){
+    private Boolean editClientInformation(String dataType, String value, Client client){
+        Boolean somethingChanged = true;
         try {
             switch (dataType) {
                 case "password":
@@ -190,12 +222,8 @@ public class ClientServiceImpl implements IClientService {
                     clientHome.merge(client);
                     break;
                 case "state":
-                    if (getStateByStringValue(value) == null) {
-                        break;
-                    } else {
-                        client.setState(getStateByStringValue(value));
-                        clientHome.merge(client);
-                    }
+                    client.setState(value.equals("ACTIVE") ? ConstantsUtil.ACTIVE.getValue()  : ConstantsUtil.INACTIVE.getValue());
+                    clientHome.merge(client);
                     break;
                 case "name":
                     client.setName(value);
@@ -214,7 +242,7 @@ public class ClientServiceImpl implements IClientService {
                     clientHome.merge(client);
                     break;
                 case "genre":
-                    client.setGenre(value.equals("M") ? ConstantsUtil.MALE.getValue() : ConstantsUtil.FEMALE.getValue());
+                    client.setGenre(value.equals("MALE") ? ConstantsUtil.MALE.getValue() : ConstantsUtil.FEMALE.getValue());
                     clientHome.merge(client);
                     break;
                 case "address":
@@ -225,7 +253,10 @@ public class ClientServiceImpl implements IClientService {
                     client.setPhone(value);
                     clientHome.merge(client);
                     break;
+                default:
+                    somethingChanged = false;
             }
+            return somethingChanged;
         } catch (Exception error){
             throw error;
         }
