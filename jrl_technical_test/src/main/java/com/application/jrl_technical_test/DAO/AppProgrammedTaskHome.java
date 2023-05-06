@@ -2,7 +2,6 @@ package com.application.jrl_technical_test.DAO;
 
 
 import com.application.jrl_technical_test.Entities.AppProgrammedTask;
-import com.application.jrl_technical_test.Entities.Movement;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.ejb.Stateless;
@@ -31,6 +30,7 @@ public class AppProgrammedTaskHome {
     public void remove(AppProgrammedTask appProgrammedTask){
         try{
             entityManager.remove(appProgrammedTask);
+            entityManager.flush();
         } catch (RuntimeException error){
             throw error;
         }
@@ -54,10 +54,10 @@ public class AppProgrammedTaskHome {
         }
     }
 
-    public AppProgrammedTask findByKey(String key){
+    public AppProgrammedTask findByCode(String code){
         try{
-            TypedQuery<AppProgrammedTask> query = entityManager.createQuery("SELECT PT FROM AppProgrammedTask PT WHERE PT.key = :key", AppProgrammedTask.class);
-            query.setParameter("key", key);
+            TypedQuery<AppProgrammedTask> query = entityManager.createQuery("SELECT PT FROM AppProgrammedTask PT WHERE PT.code = :code", AppProgrammedTask.class);
+            query.setParameter("code", code);
             AppProgrammedTask appProgrammedTask = query.getSingleResult();
             return appProgrammedTask;
         } catch (RuntimeException error){

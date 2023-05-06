@@ -54,10 +54,10 @@ public class AccountDayLimitServiceImpl implements IAccountDayLimitService {
     public void initializeProgrammedTaskIfFirst(){
         try{
             Optional<AppProgrammedTask> appProgrammedTask = Optional.ofNullable
-                    (appProgrammedTaskHome.findByKey(ConstantsUtil.KEY_DAILY_LIMIT_APP_TASK));
+                    (appProgrammedTaskHome.findByCode(ConstantsUtil.KEY_DAILY_LIMIT_APP_TASK));
             if(!appProgrammedTask.isPresent()) {
                 appTaskManagerService.addTask(ConstantsUtil.KEY_DAILY_LIMIT_APP_TASK,
-                        FormatUtil.addSubstractDaysDate(FormatUtil.getCleanTodayDate(), 1), AppTaskType.DAILY_RETREAT_LIMIT);
+                        FormatUtil.addSubstractDaysDate(FormatUtil.getCleanTodayDate(), 1), AppTaskType.DAILY_RETREAT_MAX_AMMOUNT);
             }
         }catch (Exception e){
             throw e;

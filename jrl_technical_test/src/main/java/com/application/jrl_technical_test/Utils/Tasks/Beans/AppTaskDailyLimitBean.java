@@ -24,7 +24,7 @@ public class AppTaskDailyLimitBean {
     private AppTaskManagerService appTaskManagerService;
 
 
-    @Transactional()
+    @Transactional
     public void restartDailyLimitWithdraw(String key) throws Exception{
         try{
             List<AccountDailyWithdraw> accountDailyWithdrawList = accountDailyWithdrawHome.findAll();
@@ -34,13 +34,13 @@ public class AppTaskDailyLimitBean {
                     accountDailyWithdrawHome.merge(adl);
                 }
                 appTaskManagerService.clearTask(key);
-                appTaskManagerService.addTask(ConstantsUtil.KEY_DAILY_LIMIT_APP_TASK, FormatUtil.addSubstractDaysDate(new Date(), 1), AppTaskType.DAILY_RETREAT_LIMIT);
+                appTaskManagerService.addTask(ConstantsUtil.KEY_DAILY_LIMIT_APP_TASK, FormatUtil.addSubstractDaysDate(new Date(), 1), AppTaskType.DAILY_RETREAT_MAX_AMMOUNT);
             }else {
                 appTaskManagerService.clearTask(key);
-                appTaskManagerService.addTask(ConstantsUtil.KEY_DAILY_LIMIT_APP_TASK, FormatUtil.addSubstractDaysDate(new Date(), 1), AppTaskType.DAILY_RETREAT_LIMIT);
+                appTaskManagerService.addTask(ConstantsUtil.KEY_DAILY_LIMIT_APP_TASK, FormatUtil.addSubstractDaysDate(new Date(), 1), AppTaskType.DAILY_RETREAT_MAX_AMMOUNT);
             }
         }catch (Exception e){
-
+            throw e;
         }
     }
 

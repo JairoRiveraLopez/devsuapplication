@@ -1,7 +1,7 @@
 package com.application.jrl_technical_test.Utils.Tasks;
 
 public enum AppTaskType {
-    DAILY_RETREAT_LIMIT("DAILY_RETREAT");
+    DAILY_RETREAT_MAX_AMMOUNT("DAILY_RETREAT");
 
     private final String type;
 

@@ -4,19 +4,21 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "APP_PROGRAMMED_TASK")
+@Table(name = "APP_PROGRAMMED_TASK", uniqueConstraints = @UniqueConstraint(columnNames = "CODE"))
 public class AppProgrammedTask {
 
     private String appProgrammedTaskId;
-    private String key;
+    private String code;
     private Date executionDate;
     private String taskType;
 
     public AppProgrammedTask(){}
 
-    public AppProgrammedTask(String appProgrammedTaskId, String key, Date executionDate, String taskType) {
+    public AppProgrammedTask(String appProgrammedTaskId) {this.appProgrammedTaskId = appProgrammedTaskId;}
+
+    public AppProgrammedTask(String appProgrammedTaskId, String code, Date executionDate, String taskType) {
         this.appProgrammedTaskId = appProgrammedTaskId;
-        this.key = key;
+        this.code = code;
         this.executionDate = executionDate;
         this.taskType = taskType;
     }
@@ -31,13 +33,13 @@ public class AppProgrammedTask {
         this.appProgrammedTaskId = appProgrammedTaskId;
     }
 
-    @Column(name = "KEY", length = 50)
-    public String getKey() {
-        return key;
+    @Column(name = "CODE", unique = true, length = 50)
+    public String getCode() {
+        return code;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setCode(String code) {
+        this.code = code;
     }
     @Temporal(TemporalType.DATE)
     @Column(name = "EXECUTION_DATE", length = 19)

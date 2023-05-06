@@ -45,7 +45,7 @@ public class AccountDailyWithdrawHome {
 
     public List<AccountDailyWithdraw> findAll(){
         try{
-            TypedQuery<AccountDailyWithdraw> query = entityManager.createQuery("SELECT DL FROM AccountDailyLimit DL", AccountDailyWithdraw.class);
+            TypedQuery<AccountDailyWithdraw> query = entityManager.createQuery("SELECT DW FROM AccountDailyWithdraw DW", AccountDailyWithdraw.class);
             List<AccountDailyWithdraw> accountDailyWithdrawList = query.getResultList();
             return accountDailyWithdrawList;
         } catch (RuntimeException error){

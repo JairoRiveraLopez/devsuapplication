@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.*;
 
 @SpringBootApplication
@@ -17,6 +19,9 @@ public class AppTaskManagerService {
     private static final int MAX_ATTEMPTS = 3;
     
     private static final int TIME_ATTEMPS_DELETE = 100;
+
+    @PersistenceContext
+    private EntityManager entityManager;
     
     @Autowired
     private AppTaskFactory appTaskFactory;
@@ -32,7 +37,7 @@ public class AppTaskManagerService {
         for(AppProgrammedTask task : appProgrammedTaskList){
             AppTaskType appTaskType = AppTaskType.findType(task.getTaskType());
             AppTask appTask = appTaskFactory.getInstanceAppTask(appTaskType);
-            appTask.setKey(task.getKey());
+            appTask.setKey(task.getCode());
             appTask.setDate(task.getExecutionDate());
             startTask(appTask);
         }
@@ -47,12 +52,12 @@ public class AppTaskManagerService {
         timer.schedule(appTask, appTask.getDate());
     }
     
-    @Transactional()
+    @Transactional
     public void addTask(String key, Date date, AppTaskType appTaskType){
         try{
           AppProgrammedTask appProgrammedTask = new AppProgrammedTask();
           appProgrammedTask.setAppProgrammedTaskId(UUID.randomUUID().toString());
-          appProgrammedTask.setKey(key);
+          appProgrammedTask.setCode(key);
           Calendar calendar = Calendar.getInstance();
           calendar.setTime(date);
           appProgrammedTask.setExecutionDate(calendar.getTime());
@@ -69,12 +74,12 @@ public class AppTaskManagerService {
         }
     }
 
-    @Transactional()
+    @Transactional
     public synchronized void clearTask(String key){
         try{
             int attempts = MAX_ATTEMPTS;
             while(attempts > 0){
-                AppProgrammedTask appProgrammedTask = appProgrammedTaskHome.findByKey(key);
+                AppProgrammedTask appProgrammedTask = appProgrammedTaskHome.findByCode(key);
                 if(appProgrammedTask != null){
                     appProgrammedTaskHome.remove(appProgrammedTask);
                     Timer timer = (Timer) this.appTaskMap.get(key).get("timer");

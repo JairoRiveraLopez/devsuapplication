@@ -36,5 +36,10 @@ public abstract class AppTask extends TimerTask {
         this.appTaskType = appTaskType;
     }
 
+    public void clearTask(String key){ this.appTaskManagerService.clearTask(key);}
+
+    public void setManager(AppTaskManagerService appTaskManagerService){
+        this.appTaskManagerService = appTaskManagerService;
+    }
 
 }
