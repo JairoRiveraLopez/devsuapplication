@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
-@Table(name = "ACCOUNT", uniqueConstraints = @UniqueConstraint(columnNames = "ID_ACCOUNT"))
+@Table(name = "ACCOUNT", uniqueConstraints = @UniqueConstraint(columnNames = {"ID_ACCOUNT", "ACCOUNT_NUMBER"}))
 public class Account implements java.io.Serializable{
 
     private String accountId;
@@ -38,7 +38,7 @@ public class Account implements java.io.Serializable{
         this.accountId = accountId;
     }
 
-    @Column(name = "ACCOUNT_NUMBER", length = 20)
+    @Column(name = "ACCOUNT_NUMBER", length = 20, unique = true)
     public String getAccountNumber() {
         return accountNumber;
     }

@@ -45,15 +45,6 @@ public class AppProgrammedTaskHome {
         }
     }
 
-    public AppProgrammedTask findById(String appProgrammedTaskId){
-        try{
-            AppProgrammedTask result = entityManager.find(AppProgrammedTask.class, appProgrammedTaskId);
-            return result;
-        } catch (RuntimeException error){
-            throw error;
-        }
-    }
-
     public AppProgrammedTask findByCode(String code){
         try{
             TypedQuery<AppProgrammedTask> query = entityManager.createQuery("SELECT PT FROM AppProgrammedTask PT WHERE PT.code = :code", AppProgrammedTask.class);
