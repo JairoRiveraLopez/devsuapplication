@@ -1,6 +1,7 @@
 package com.application.jrl_technical_test.Entities;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -10,19 +11,22 @@ public class Movement implements java.io.Serializable{
     private String idMovement;
     private Date movementDate;
     private String movementType;
-    private Double value;
+    private BigDecimal value;
     private Character state;
     private Account account;
 
+    private BigDecimal availableBalance;
+
     public Movement(){}
 
-    public Movement(String idMovement, Date movementDate, String movementType, Double value, Character state, Account account) {
+    public Movement(String idMovement, Date movementDate, String movementType, BigDecimal value, Character state, Account account, BigDecimal availableBalance) {
         this.idMovement = idMovement;
         this.movementDate = movementDate;
         this.movementType = movementType;
         this.value = value;
         this.state = state;
         this.account = account;
+        this.availableBalance = availableBalance;
     }
 
     @Id
@@ -55,11 +59,11 @@ public class Movement implements java.io.Serializable{
     }
 
     @Column(name = "VALUE")
-    public Double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 
@@ -80,5 +84,14 @@ public class Movement implements java.io.Serializable{
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @Column(name = "AVAILABLE_BALANCE")
+    public BigDecimal getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public void setAvailableBalance(BigDecimal availableBalance) {
+        this.availableBalance = availableBalance;
     }
 }

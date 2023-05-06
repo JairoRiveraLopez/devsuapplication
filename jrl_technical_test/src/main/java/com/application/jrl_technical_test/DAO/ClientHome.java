@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 @Stateless
@@ -61,6 +63,25 @@ public class ClientHome {
             if(error instanceof NoResultException){
                 return null;
             }
+            throw error;
+        }
+    }
+
+    public List<Object[]> findAccountStateReportByClient(String clientId, Date minDate, Date maxDate){
+        String SQL = "SELECT mv, acc, cl FROM Movement mv " +
+                "LEFT JOIN mv.account acc " +
+                "LEFT JOIN acc.client cl " +
+                "WHERE (  " +
+                "cl.clientId = :clientId AND " +
+                "mv.movementDate between :minDate and :maxDate) ";
+        try{
+            TypedQuery<Object[]> query = entityManager.createQuery(SQL, Object[].class);
+            query.setParameter("clientId", clientId);
+            query.setParameter("minDate", minDate);
+            query.setParameter("maxDate", maxDate);
+            List<Object[]> accountStateList = query.getResultList();
+            return accountStateList;
+        }catch (RuntimeException error){
             throw error;
         }
     }

@@ -53,4 +53,18 @@ public class AccountDailyWithdrawHome {
         }
     }
 
+    public AccountDailyWithdraw findByAccountId(String accountId){
+        try{
+            TypedQuery<AccountDailyWithdraw> query = entityManager.createQuery("SELECT DW FROM AccountDailyWithdraw DW WHERE DW.account.accountId = :accountId", AccountDailyWithdraw.class);
+            query.setParameter("accountId", accountId);
+            AccountDailyWithdraw accountDailyWithdraw= query.getSingleResult();
+            return accountDailyWithdraw;
+        } catch (RuntimeException error){
+            if(error instanceof NoResultException){
+                return null;
+            }
+            throw error;
+        }
+    }
+
 }

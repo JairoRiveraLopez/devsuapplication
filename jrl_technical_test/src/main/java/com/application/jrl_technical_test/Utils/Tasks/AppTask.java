@@ -1,5 +1,6 @@
 package com.application.jrl_technical_test.Utils.Tasks;
 
+import com.application.jrl_technical_test.Exception.InternalAppException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -36,7 +37,7 @@ public abstract class AppTask extends TimerTask {
         this.appTaskType = appTaskType;
     }
 
-    public void clearTask(String key){ this.appTaskManagerService.clearTask(key);}
+    public void clearTask(String key) throws InternalAppException { this.appTaskManagerService.clearTask(key);}
 
     public void setManager(AppTaskManagerService appTaskManagerService){
         this.appTaskManagerService = appTaskManagerService;

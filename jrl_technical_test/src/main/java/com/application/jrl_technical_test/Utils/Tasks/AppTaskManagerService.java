@@ -2,8 +2,12 @@ package com.application.jrl_technical_test.Utils.Tasks;
 
 import com.application.jrl_technical_test.DAO.AppProgrammedTaskHome;
 import com.application.jrl_technical_test.Entities.AppProgrammedTask;
+import com.application.jrl_technical_test.Exception.InternalAppException;
+import com.application.jrl_technical_test.Web.DTO.ExceptionDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -75,7 +79,7 @@ public class AppTaskManagerService {
     }
 
     @Transactional
-    public synchronized void clearTask(String key){
+    public synchronized void clearTask(String key) throws InternalAppException {
         try{
             int attempts = MAX_ATTEMPTS;
             while(attempts > 0){
@@ -99,7 +103,9 @@ public class AppTaskManagerService {
                 attempts--;
             }
         } catch (Exception e){
-            throw e;
+            ExceptionDTO exceptionDTO = ExceptionDTO.getExceptionDTO(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                    "clearTask failed", HttpStatus.INTERNAL_SERVER_ERROR.value());
+            throw new InternalAppException(exceptionDTO);
         }
         
     }
