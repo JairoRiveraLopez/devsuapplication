@@ -1,0 +1,681 @@
+{
+	"info": {
+		"_postman_id": "90c8eb3e-483b-470d-9d11-e390782c3920",
+		"name": "Devsu Application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21244538"
+	},
+	"item": [
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Persist Client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\" : 1234,\r\n    \"state\" : \"ACTIVE\",\r\n    \"identification\" : \"123456789\",\r\n    \"name\" : \"Jairo\",\r\n    \"lastName1\" : \"Rivera\",\r\n    \"lastName2\" : \"Lopez\",\r\n    \"genre\" : \"MALE\",\r\n    \"age\" : 27,\r\n    \"address\" : \"Cll 1\",\r\n    \"phone\" : \"+57 3243562513\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/clients/persist-client",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"clients",
+								"persist-client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Client by Identification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"clientId\", jsonData.body.data.clientFound.clientId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "identification",
+								"value": "123456789",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8443/clients/find-client-by-identification",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"clients",
+								"find-client-by-identification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Client _ Success",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "clientId",
+								"value": "{{clientId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\" : \"031b1f89-e68d-4a1c-a8a9-48e643439158\",\r\n    \"password\" : 1234,\r\n    \"state\" : \"ACTIVE\",\r\n    \"identification\" : \"987654321\",\r\n    \"name\" : \"Milena\",\r\n    \"lastName1\" : \"Rivera\",\r\n    \"lastName2\" : \"Lopez\",\r\n    \"genre\" : \"MALE\",\r\n    \"age\" : 27,\r\n    \"address\" : \"Cll 1\",\r\n    \"phone\" : \"+57 3243562513\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/clients/update-client",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"clients",
+								"update-client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Client _Failed Not Found",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "clientId",
+								"value": "99999999",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\" : 1234,\r\n    \"state\" : \"ACTIVE\",\r\n    \"identification\" : \"987654321\",\r\n    \"name\" : \"Milena\",\r\n    \"lastName1\" : \"Rivera\",\r\n    \"lastName2\" : \"Lopez\",\r\n    \"genre\" : \"MALE\",\r\n    \"age\" : 27,\r\n    \"address\" : \"Cll 1\",\r\n    \"phone\" : \"+57 3243562513\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/clients/update-client",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"clients",
+								"update-client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Client _Failed Wrong Information",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "clientId",
+								"value": "99999999",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\" : 1234,\r\n    \"state\" : \"ACTIVE\",\r\n    \"identification\" : \"987654321\",\r\n    \"name\" : \"Milena\",\r\n    \"lastName1\" : \"Rivera\",\r\n    \"lastName3\" : \"Lopez\",\r\n    \"genre\" : \"MALE\",\r\n    \"age\" : 27,\r\n    \"address\" : \"Cll 1\",\r\n    \"phone\" : \"+57 3243562513\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/clients/update-client",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"clients",
+								"update-client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Client _ Success",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8443/clients/edit-client?clientId={{clientId}}&dataType=state&value=INACTIVE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"clients",
+								"edit-client"
+							],
+							"query": [
+								{
+									"key": "clientId",
+									"value": "{{clientId}}"
+								},
+								{
+									"key": "dataType",
+									"value": "state"
+								},
+								{
+									"key": "value",
+									"value": "INACTIVE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Client _ Success",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "clientId",
+								"value": "{{clientId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8443/clients/remove-client",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"clients",
+								"remove-client"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Persist Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountNumber\" : 585545,\r\n    \"accountType\" : \"SAVINGS\",\r\n    \"initialBalance\" : 1000,\r\n    \"state\" : \"Active\",\r\n    \"clientId\" : \"{{clientId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/accounts/persist-account",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"accounts",
+								"persist-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Account by Account Number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"accountId\", jsonData.body.data.accountFound.accountId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accountNumber",
+								"value": "585545",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8443/accounts/find-account-by-account-number",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"accounts",
+								"find-account-by-account-number"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Account _ Sucess",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accountId",
+								"value": "{{accountId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accountNumber\" : 585545,\r\n    \"accountType\" : \"SAVINGS\",\r\n    \"initialBalance\" : 2000,\r\n    \"state\" : \"Active\",\r\n    \"clientId\" : \"{{clientId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/accounts/update-account",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"accounts",
+								"update-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Account _ Success",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8443/accounts/edit-account?accountId={{accountId}}&dataType=state&value=INACTIVE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"accounts",
+								"edit-account"
+							],
+							"query": [
+								{
+									"key": "accountId",
+									"value": "{{accountId}}"
+								},
+								{
+									"key": "dataType",
+									"value": "state"
+								},
+								{
+									"key": "value",
+									"value": "INACTIVE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Account",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accountId",
+								"value": "{{accountId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8443/accounts/remove-account",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"accounts",
+								"remove-account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movements",
+			"item": [
+				{
+					"name": "Persist Movement Withdraw _ Successfull",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"movementId\", jsonData.body.data.movementIdForTest);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"movementType\" : \"WITHDRAW\",\r\n    \"value\" : 1000,\r\n    \"accountNumber\" : 585545,\r\n    \"password\" : 1234\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/movements/persist-movement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"movements",
+								"persist-movement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Persist Movement Deposit _ Successfull",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"movementType\" : \"DEPOSIT\",\r\n    \"value\" : 1000,\r\n    \"accountNumber\" : 585545,\r\n    \"password\" : 1234\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/movements/persist-movement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"movements",
+								"persist-movement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Movement _ Successfull",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "movementId",
+								"value": "{{movementId}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"movementType\" : \"DEPOSIT\",\r\n    \"movementDate\" : \"2023-05-31\",\r\n    \"value\" : 1000,\r\n    \"accountNumber\" : 585545,\r\n    \"password\" : 1234\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8443/movements/update-movement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"movements",
+								"update-movement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Account _ Success Copy",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8443/movements/edit-movement?movementId={{movementId}}&dataType=state&value=REJECTED",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"movements",
+								"edit-movement"
+							],
+							"query": [
+								{
+									"key": "movementId",
+									"value": "{{movementId}}"
+								},
+								{
+									"key": "dataType",
+									"value": "state"
+								},
+								{
+									"key": "value",
+									"value": "REJECTED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Movement",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "movementId",
+								"value": "{{movementId}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8443/movements/remove-movement",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"movements",
+								"remove-movement"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Report",
+			"item": [
+				{
+					"name": "Get Account State Report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "identification",
+								"value": "123456789",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8443/reports/get-account-state-report?password=1234&clientId={{clientId}}&minDateString=2020-01-10&maxDateString=2030-01-10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8443",
+							"path": [
+								"reports",
+								"get-account-state-report"
+							],
+							"query": [
+								{
+									"key": "password",
+									"value": "1234"
+								},
+								{
+									"key": "clientId",
+									"value": "{{clientId}}"
+								},
+								{
+									"key": "minDateString",
+									"value": "2020-01-10"
+								},
+								{
+									"key": "maxDateString",
+									"value": "2030-01-10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "clientId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "accountId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "movementId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
